@@ -9,6 +9,11 @@ import { Users, UserPlus, Shield, ArrowRight, Sparkles, Terminal } from "lucide-
 
 const NAV_ITEMS: TextItem[] = [
   {
+    text: "EMB",
+    href: "/",
+    image: "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=600&q=80",
+  },
+  {
     text: "TEAM",
     href: "/team",
     image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=600&q=80",
@@ -22,11 +27,6 @@ const NAV_ITEMS: TextItem[] = [
     text: "ADMIN",
     href: "/admin",
     image: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=600&q=80",
-  },
-  {
-    text: "EMBRIONE",
-    href: "/team",
-    image: "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=600&q=80",
   },
 ];
 

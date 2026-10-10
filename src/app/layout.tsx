@@ -39,9 +39,6 @@ export default function RootLayout({
         <footer className="border-t border-white/5 py-6 px-4 text-center text-xs text-zinc-400">
           <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
             <p>© 2026 Embrione Club, PES University. All rights reserved.</p>
-            <p className="text-zinc-400">
-              Built with Next.js App Router, Tailwind CSS & Supabase
-            </p>
           </div>
         </footer>
         <Toaster

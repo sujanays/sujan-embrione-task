@@ -21,9 +21,9 @@ export interface CircularRevealHeadingProps {
 }
 
 const SIZE_CONFIG = {
-  sm: { diameter: 300, radius: 110, fontSize: "11px", innerImageSize: 130 },
-  md: { diameter: 400, radius: 150, fontSize: "13px", innerImageSize: 180 },
-  lg: { diameter: 500, radius: 190, fontSize: "15px", innerImageSize: 230 },
+  sm: { diameter: 320, radius: 115, fontSize: "11px", innerImageSize: 140 },
+  md: { diameter: 420, radius: 155, fontSize: "12px", innerImageSize: 190 },
+  lg: { diameter: 520, radius: 195, fontSize: "13px", innerImageSize: 240 },
 };
 
 export function CircularRevealHeading({
@@ -35,13 +35,16 @@ export function CircularRevealHeading({
 }: CircularRevealHeadingProps) {
   const router = useRouter();
   const shouldReduceMotion = useReducedMotion();
-  const [activeItem, setActiveItem] = useState<TextItem | null>(null);
-  const [touchedItem, setTouchedItem] = useState<string | null>(null);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [touchedIndex, setTouchedIndex] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const { diameter, radius, fontSize, innerImageSize } = SIZE_CONFIG[size] || SIZE_CONFIG.lg;
+  const { diameter, radius, fontSize, innerImageSize } =
+    SIZE_CONFIG[size] || SIZE_CONFIG.lg;
 
-  // Memoize image array for preloading
+  const totalItems = items.length;
+
+  // Preload images
   const imageSources = useMemo(() => items.map((i) => i.image), [items]);
 
   useEffect(() => {
@@ -51,27 +54,21 @@ export function CircularRevealHeading({
     });
   }, [imageSources]);
 
-  // Total items spacing around the perimeter
-  const segments = useMemo(() => {
-    const total = items.length;
-    return items.map((item, index) => {
-      const angle = (index / total) * 360;
-      return {
-        ...item,
-        angle,
-      };
-    });
-  }, [items]);
-
-  const handleItemTouch = (item: TextItem, e: React.TouchEvent) => {
-    if (touchedItem === item.text) {
+  const handleItemTouch = (
+    item: TextItem,
+    index: number,
+    e: React.TouchEvent
+  ) => {
+    if (touchedIndex === index) {
       router.push(item.href);
     } else {
       e.preventDefault();
-      setTouchedItem(item.text);
-      setActiveItem(item);
+      setTouchedIndex(index);
+      setActiveIndex(index);
     }
   };
+
+  const activeItem = activeIndex !== null ? items[activeIndex] : null;
 
   return (
     <div
@@ -96,7 +93,8 @@ export function CircularRevealHeading({
       <div
         className="absolute inset-2 rounded-full border border-white/10 transition-transform duration-500 shadow-2xl"
         style={{
-          background: "radial-gradient(135% 135% at 30% 25%, #1c1c24 0%, #111116 55%, #09090c 100%)",
+          background:
+            "radial-gradient(135% 135% at 30% 25%, #1c1c24 0%, #111116 55%, #09090c 100%)",
           boxShadow:
             "inset 0 1px 1px rgba(255, 255, 255, 0.15), inset 0 -2px 6px rgba(0, 0, 0, 0.8), 0 20px 40px -15px rgba(0,0,0,0.8)",
         }}
@@ -105,11 +103,7 @@ export function CircularRevealHeading({
       {/* Rotating Ring with Text Links */}
       <motion.div
         className="absolute inset-0 flex items-center justify-center cursor-pointer pointer-events-auto"
-        animate={
-          shouldReduceMotion
-            ? { rotate: 0 }
-            : { rotate: 360 }
-        }
+        animate={shouldReduceMotion ? { rotate: 0 } : { rotate: 360 }}
         transition={{
           repeat: Infinity,
           ease: "linear",
@@ -120,29 +114,34 @@ export function CircularRevealHeading({
           viewBox={`0 0 ${diameter} ${diameter}`}
           width={diameter}
           height={diameter}
-          className="w-full h-full"
+          className="w-full h-full overflow-visible"
         >
           <defs>
+            {/* Smooth closed circular track */}
             <path
               id={`circle-track-${diameter}`}
-              d={`M ${diameter / 2},${diameter / 2} m -${radius},0 a ${radius},${radius} 0 1,1 ${radius * 2},0 a ${radius},${radius} 0 1,1 -${radius * 2},0`}
+              d={`
+                M ${diameter / 2}, ${diameter / 2 - radius}
+                a ${radius},${radius} 0 1,1 0,${radius * 2}
+                a ${radius},${radius} 0 1,1 0,-${radius * 2}
+              `}
             />
           </defs>
 
-          {segments.map((item, idx) => {
-            const totalChars = segments.reduce((acc, curr) => acc + curr.text.length + 8, 0);
-            const offsetPercentage = `${(idx / segments.length) * 100}%`;
-            const isHovered = activeItem?.text === item.text;
+          {items.map((item, idx) => {
+            
+            const offsetPercentage = `${((idx + 0.5) / totalItems) * 100}%`;
+            const isHovered = activeIndex === idx;
 
             return (
               <text
-                key={item.text}
+                key={`${item.text}-${idx}`}
                 role="link"
                 tabIndex={0}
                 aria-label={`Navigate to ${item.text}`}
-                onMouseEnter={() => setActiveItem(item)}
-                onMouseLeave={() => setActiveItem(null)}
-                onTouchStart={(e) => handleItemTouch(item, e)}
+                onMouseEnter={() => setActiveIndex(idx)}
+                onMouseLeave={() => setActiveIndex(null)}
+                onTouchStart={(e) => handleItemTouch(item, idx, e)}
                 onClick={() => router.push(item.href)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
@@ -150,14 +149,16 @@ export function CircularRevealHeading({
                     router.push(item.href);
                   }
                 }}
-                className="cursor-pointer transition-all duration-300 outline-none focus:fill-violet-400"
+                className="cursor-pointer transition-all duration-300 outline-none"
                 style={{
                   fontSize,
-                  letterSpacing: "0.22em",
+                  letterSpacing: "0.12em",
                   textTransform: "uppercase",
                   fontWeight: isHovered ? 700 : 500,
                   fill: isHovered ? "#38bdf8" : "#d4d4d8",
-                  filter: isHovered ? "drop-shadow(0 0 8px rgba(56, 189, 248, 0.8))" : "none",
+                  filter: isHovered
+                    ? "drop-shadow(0 0 8px rgba(56, 189, 248, 0.8))"
+                    : "none",
                 }}
               >
                 <textPath
@@ -173,19 +174,20 @@ export function CircularRevealHeading({
         </svg>
       </motion.div>
 
-      {/* Center Core Reveal Area */}
+      {/* Center Core Area */}
       <div
         className="relative z-10 flex items-center justify-center overflow-hidden rounded-full border border-white/10 shadow-inner bg-[#0d0d10]"
         style={{
           width: innerImageSize,
           height: innerImageSize,
-          boxShadow: "inset 0 4px 12px rgba(0,0,0,0.8), 0 0 20px rgba(0,0,0,0.5)",
+          boxShadow:
+            "inset 0 4px 12px rgba(0,0,0,0.8), 0 0 20px rgba(0,0,0,0.5)",
         }}
       >
         <AnimatePresence mode="wait">
           {activeItem ? (
             <motion.div
-              key={activeItem.text}
+              key={activeIndex}
               initial={{ opacity: 0, scale: 0.92 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
@@ -201,7 +203,7 @@ export function CircularRevealHeading({
                 priority
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent flex flex-col items-center justify-end pb-3">
-                <span className="text-xs font-bold uppercase tracking-wider text-white drop-shadow-md">
+                <span className="text-xs font-bold uppercase tracking-wider text-white drop-shadow-md text-center px-2">
                   {activeItem.text}
                 </span>
                 <span className="text-[10px] text-cyan-300 font-medium tracking-tight">
@@ -216,13 +218,13 @@ export function CircularRevealHeading({
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.25 }}
-              className="flex flex-col items-center justify-center text-center p-3"
+              className="flex flex-col items-center justify-center text-center p-2 w-full"
             >
               <div className="h-2 w-2 rounded-full bg-cyan-400 mb-2 animate-pulse shadow-sm shadow-cyan-400" />
-              <span className="font-extrabold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-violet-300 via-white to-cyan-300 text-sm md:text-base">
+              <span className="font-extrabold tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-violet-300 via-white to-cyan-300 text-xs sm:text-sm md:text-base leading-tight block w-full truncate">
                 {centerText}
               </span>
-              <span className="text-[9px] md:text-[10px] uppercase tracking-widest text-zinc-400 font-medium mt-1">
+              <span className="text-[9px] md:text-[10px] uppercase tracking-wider text-zinc-400 font-medium mt-1 block">
                 {centerSubtitle}
               </span>
             </motion.div>
