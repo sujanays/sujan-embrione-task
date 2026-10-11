@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Terminal, Disc3 } from "lucide-react";
+import { Terminal } from "lucide-react";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -12,7 +12,7 @@ export function Navbar() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-white/8 bg-[#0a0a0b]/80 backdrop-blur-xl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
+        <div className={`flex h-16 items-center ${isHome ? 'justify-center' : 'justify-between'} transition-all duration-300`}>
           {/* Logo */}
           <Link
             href="/"
@@ -39,20 +39,12 @@ export function Navbar() {
 
           {/* Right Action / Hub Indicator */}
           <div className="flex items-center gap-3">
-            {!isHome ? (
-              <Link
-                href="/"
-                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-medium text-zinc-300 bg-white/5 border border-white/10 hover:bg-white/10 hover:text-white transition-all shadow-sm group"
-              >
-                <Disc3 className="w-3.5 h-3.5 text-cyan-400 group-hover:rotate-90 transition-transform duration-300" />
-                <span>Central Hub</span>
-              </Link>
-            ) : (
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-violet-950/40 border border-violet-500/20 text-xs text-violet-300">
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-                <span className="hidden sm:inline">Interactive Navigation Plate</span>
-                <span className="sm:hidden">Active Hub</span>
-              </div>
+            {!isHome && (
+              <div className="rounded-xl border border-cyan-500/30 bg-slate-900/50 p-3 transition-all duration-300 ease-in-out hover:border-cyan-400 hover:shadow-[0_0_15px_rgba(6,182,212,0.5)]">
+  <Link href="/" className="text-sm text-white">
+    Central Hub
+  </Link>
+</div>
             )}
           </div>
         </div>

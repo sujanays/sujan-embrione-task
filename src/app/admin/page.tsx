@@ -218,7 +218,7 @@ export default function AdminPage() {
                     required
                     value={emailInput}
                     onChange={(e) => setEmailInput(e.target.value)}
-                    placeholder="admin@embrione.pes.edu"
+                    placeholder="Enter admin email"
                     className="w-full px-4 py-2.5 rounded-xl bg-[#181820] border border-white/10 text-white placeholder-zinc-500 focus:outline-none focus:border-cyan-400 text-sm"
                   />
                   <Mail className="absolute right-3.5 top-3 w-4 h-4 text-zinc-500 pointer-events-none" />
@@ -264,12 +264,7 @@ export default function AdminPage() {
               </button>
             </form>
 
-            {/* Quick Helper Credentials Note */}
-            <div className="mt-6 pt-5 border-t border-white/5 text-center text-xs text-zinc-400 space-y-1">
-              <p className="text-zinc-300 font-medium">Default Credentials from Spec:</p>
-              <p className="font-mono text-[11px] text-cyan-300">admin@embrione.pes.edu</p>
-              <p className="font-mono text-[11px] text-zinc-300">EmbrioneAdmin@2026</p>
-            </div>
+            {/* Credentials are handled securely in the backend and not displayed here */}
           </div>
         </div>
       </div>

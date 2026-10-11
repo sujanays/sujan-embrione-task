@@ -88,8 +88,8 @@ export default function HomePage() {
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-violet-950/50 border border-violet-500/30 shadow-[0_0_20px_rgba(139,92,246,0.18)] text-violet-200 text-xs sm:text-sm font-medium tracking-wide backdrop-blur-md">
             <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse shrink-0" />
             <TypewriterText
-              text="Click on central disc roles"
-              speed={40}
+              text="Choose your path. Choose your Embrione."
+              speed={50}
               delay={350}
               loop={true}
               pauseFor={3500}
