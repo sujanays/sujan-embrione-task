@@ -1,21 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "@/lib/utils";
-import { Users, UserPlus, Shield, Menu, X, Terminal } from "lucide-react";
+import { Terminal, Disc3 } from "lucide-react";
 
 export function Navbar() {
   const pathname = usePathname();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const navLinks = [
-    { href: "/team", label: "Team", icon: Users },
-    { href: "/register", label: "Register", icon: UserPlus },
-    { href: "/admin", label: "Admin", icon: Shield },
-  ];
+  const isHome = pathname === "/";
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-white/8 bg-[#0a0a0b]/80 backdrop-blur-xl">
@@ -45,85 +37,27 @@ export function Navbar() {
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-1">
-            {navLinks.map((link) => {
-              const Icon = link.icon;
-              const isActive = pathname === link.href;
-
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={cn(
-                    "relative flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-medium transition-all duration-200",
-                    isActive
-                      ? "text-white bg-white/5 border border-white/10 shadow-inner"
-                      : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.03]"
-                  )}
-                >
-                  <Icon className={cn("w-4 h-4", isActive ? "text-cyan-400" : "text-zinc-400")} />
-                  <span>{link.label}</span>
-                  {isActive && (
-                    <motion.div
-                      layoutId="nav-glow-indicator"
-                      className="absolute bottom-0 left-2 right-2 h-0.5 bg-gradient-to-r from-violet-400 to-cyan-400 rounded-full"
-                    />
-                  )}
-                </Link>
-              );
-            })}
-          </nav>
-
-          {/* Mobile Menu Button */}
-          <div className="flex md:hidden">
-            <button
-              type="button"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-white/5 border border-white/5 focus:outline-none"
-              aria-label="Toggle navigation menu"
-            >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
+          {/* Right Action / Hub Indicator */}
+          <div className="flex items-center gap-3">
+            {!isHome ? (
+              <Link
+                href="/"
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-medium text-zinc-300 bg-white/5 border border-white/10 hover:bg-white/10 hover:text-white transition-all shadow-sm group"
+              >
+                <Disc3 className="w-3.5 h-3.5 text-cyan-400 group-hover:rotate-90 transition-transform duration-300" />
+                <span>Central Hub</span>
+              </Link>
+            ) : (
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-violet-950/40 border border-violet-500/20 text-xs text-violet-300">
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                <span className="hidden sm:inline">Interactive Navigation Plate</span>
+                <span className="sm:hidden">Active Hub</span>
+              </div>
+            )}
           </div>
         </div>
       </div>
-
-      {/* Mobile Drawer */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden border-b border-white/10 bg-[#0e0e12]/95 backdrop-blur-2xl overflow-hidden"
-          >
-            <div className="px-4 py-4 space-y-1">
-              {navLinks.map((link) => {
-                const Icon = link.icon;
-                const isActive = pathname === link.href;
-
-                return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className={cn(
-                      "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors",
-                      isActive
-                        ? "text-white bg-violet-600/10 border border-violet-500/20 text-cyan-300"
-                        : "text-zinc-400 hover:text-zinc-100 hover:bg-white/5"
-                    )}
-                  >
-                    <Icon className="w-5 h-5 text-violet-400" />
-                    <span>{link.label}</span>
-                  </Link>
-                );
-              })}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </header>
   );
 }
+

@@ -41,8 +41,8 @@ export default function AdminPage() {
   const [authLoading, setAuthLoading] = useState<boolean>(true);
 
   // Login form state
-  const [emailInput, setEmailInput] = useState<string>("admin@embrione.pes.edu");
-  const [passwordInput, setPasswordInput] = useState<string>("EmbrioneAdmin@2026");
+  const [emailInput, setEmailInput] = useState<string>("");
+  const [passwordInput, setPasswordInput] = useState<string>("");
   const [loginSubmitting, setLoginSubmitting] = useState<boolean>(false);
   const [loginError, setLoginError] = useState<string>("");
 
@@ -56,17 +56,7 @@ export default function AdminPage() {
   const [memberToDelete, setMemberToDelete] = useState<Member | null>(null);
   const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
 
-  useEffect(() => {
-    const hasSession = checkAdminSession();
-    setIsAuthenticated(hasSession);
-    setAuthLoading(false);
-
-    if (hasSession) {
-      loadMembers();
-    }
-  }, []);
-
-  const loadMembers = async () => {
+  const loadMembers = React.useCallback(async () => {
     try {
       setLoadingMembers(true);
       const data = await getAllMembers();
@@ -77,7 +67,21 @@ export default function AdminPage() {
     } finally {
       setLoadingMembers(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const hasSession = checkAdminSession();
+      setIsAuthenticated(hasSession);
+      setAuthLoading(false);
+
+      if (hasSession) {
+        loadMembers();
+      }
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [loadMembers]);
+
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
 import { motion } from "framer-motion";
 import { CircularRevealHeading, TextItem } from "@/components/ui/circular-reveal-heading";
+import { TypewriterText } from "@/components/ui/typewriter-text";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import { Users, UserPlus, Shield, ArrowRight, Sparkles, Terminal } from "lucide-react";
+import { Sparkles } from "lucide-react";
 
 const NAV_ITEMS: TextItem[] = [
   {
@@ -77,15 +77,26 @@ export default function HomePage() {
           </span>
         </motion.h1>
 
-        <motion.p
+        {/* Highlighted Typewriter Prompt */}
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="max-w-xl text-zinc-400 text-sm sm:text-base mb-8 leading-relaxed"
+          className="max-w-2xl text-zinc-400 text-sm sm:text-base mb-8 leading-relaxed flex flex-col items-center gap-2.5"
         >
-          Welcome to the official Embrione member platform. Interact with the central navigation
-          plate to explore approved talent, register your profile, or moderate the roster.
-        </motion.p>
+          <p>Welcome to the official Embrione member platform.</p>
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-violet-950/50 border border-violet-500/30 shadow-[0_0_20px_rgba(139,92,246,0.18)] text-violet-200 text-xs sm:text-sm font-medium tracking-wide backdrop-blur-md">
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse shrink-0" />
+            <TypewriterText
+              text="Click on central disc roles"
+              speed={40}
+              delay={350}
+              loop={true}
+              pauseFor={3500}
+              cursorClassName="text-cyan-400 font-bold"
+            />
+          </div>
+        </motion.div>
 
         {/* Center Circular Reveal Navigation Plate */}
         <motion.div
@@ -102,51 +113,12 @@ export default function HomePage() {
           />
         </motion.div>
 
-        <p className="hidden md:block text-xs text-zinc-400 mt-4 tracking-wide">
-          Hover over any section rim to reveal preview · Click to navigate
+        <p className="text-xs text-zinc-400 mt-4 tracking-wide">
+          Hover over or tap any section rim to reveal preview · Click to navigate
         </p>
-
-        {/* Mobile Fallback Link List (Section 2.2 #3: md:hidden fallback list) */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3 w-full max-w-md md:hidden"
-        >
-          <Link
-            href="/team"
-            className="flex items-center justify-between p-3.5 rounded-xl bg-[#141419] border border-white/10 hover:border-violet-500/40 text-sm font-medium text-zinc-200 transition-colors"
-          >
-            <div className="flex items-center gap-2.5">
-              <Users className="w-4 h-4 text-cyan-400" />
-              <span>Meet The Team</span>
-            </div>
-            <ArrowRight className="w-4 h-4 text-zinc-500" />
-          </Link>
-
-          <Link
-            href="/register"
-            className="flex items-center justify-between p-3.5 rounded-xl bg-[#141419] border border-white/10 hover:border-violet-500/40 text-sm font-medium text-zinc-200 transition-colors"
-          >
-            <div className="flex items-center gap-2.5">
-              <UserPlus className="w-4 h-4 text-violet-400" />
-              <span>Join Embrione</span>
-            </div>
-            <ArrowRight className="w-4 h-4 text-zinc-500" />
-          </Link>
-
-          <Link
-            href="/admin"
-            className="flex items-center justify-between p-3.5 rounded-xl bg-[#141419] border border-white/10 hover:border-violet-500/40 text-sm font-medium text-zinc-200 transition-colors"
-          >
-            <div className="flex items-center gap-2.5">
-              <Shield className="w-4 h-4 text-amber-400" />
-              <span>Admin Portal</span>
-            </div>
-            <ArrowRight className="w-4 h-4 text-zinc-500" />
-          </Link>
-        </motion.div>
       </div>
     </div>
   );
 }
+
+

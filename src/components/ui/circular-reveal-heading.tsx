@@ -107,7 +107,7 @@ export function CircularRevealHeading({
         transition={{
           repeat: Infinity,
           ease: "linear",
-          duration: 36,
+          duration: 60,
         }}
       >
         <svg
@@ -205,9 +205,6 @@ export function CircularRevealHeading({
               <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent flex flex-col items-center justify-end pb-3">
                 <span className="text-xs font-bold uppercase tracking-wider text-white drop-shadow-md text-center px-2">
                   {activeItem.text}
-                </span>
-                <span className="text-[10px] text-cyan-300 font-medium tracking-tight">
-                  Click to explore →
                 </span>
               </div>
             </motion.div>

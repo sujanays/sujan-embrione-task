@@ -591,7 +591,7 @@ export default function RegisterPage() {
             <p className="font-semibold text-zinc-300">Preview Tips:</p>
             <p>• Your avatar is converted to high-performance WebP before uploading.</p>
             <p>• Bio length must stay strictly between 150 and 200 characters.</p>
-            <p>• Once approved by an admin, this card appears in "Meet The Team".</p>
+            <p>• Once approved by an admin, this card appears in &quot;Meet The Team&quot;.</p>
           </div>
         </div>
       </div>

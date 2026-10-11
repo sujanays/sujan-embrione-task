@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { MemberCard } from "@/components/ui/member-card";
-import { Member, DOMAINS, POSITIONS, Domain, Position } from "@/lib/types";
+import { Member, DOMAINS, POSITIONS } from "@/lib/types";
 import { getApprovedMembers } from "@/lib/supabase";
-import { Users, Search, Sparkles, Filter, X, ChevronDown, UserCheck } from "lucide-react";
+import { Users, Search, Filter, X, UserCheck } from "lucide-react";
 
 export default function TeamPage() {
   const [members, setMembers] = useState<Member[]>([]);
